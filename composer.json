@@ -1,0 +1,26 @@
+{
+    "name": "placebook/framework-api",
+    "type": "library",
+    "description": "Package for receive incoming requests on GraphQL",
+    "authors": [
+        {
+            "name": "Andrey Davidovich",
+            "email": "cri2net@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "cri2net/php-pdo-db": "^1.1.1",
+        "youshido/graphql": "*",
+        "placebook/framework-basic": "^1.0.0",
+        "placebook/framework-selfupdate": "^1.2.0"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Placebook\\Framework\\": "src"
+        }
+    },
+    "license": "proprietary"
+}

@@ -1,0 +1,6 @@
+{
+    "details": {
+        "0":     {"class": null},
+        "1.0.0": {"class": "Migration_1", "namespace": "\\Placebook\\Framework\\Modules\\Install\\Api"}
+    }
+}
