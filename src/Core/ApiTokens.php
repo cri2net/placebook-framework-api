@@ -166,7 +166,7 @@ class ApiTokens
      * @param  array  $rules Массив с разрешёнными ключами. Допускаются многоуровневые массивы
      * @return array  Исходный массив с данными, без ключей, которые указаны в списке разрешённых
      */
-    public static function unsetFiledsWithoutPermission($data, $rules)
+    public static function unsetFieldsWithoutPermission($data, $rules)
     {
         if (!is_array($data)) {
             return $data;
@@ -178,7 +178,7 @@ class ApiTokens
             if (!in_array($key, $rules) && !array_key_exists($key, $rules)) {
                 unset($data[$key]);
             } elseif (is_array($rules[$key]) && is_array($data[$key])) {
-                $data[$key] = self::unsetFiledsWithoutPermission($data[$key], $rules[$key]);
+                $data[$key] = self::unsetFieldsWithoutPermission($data[$key], $rules[$key]);
             }
         }
 
