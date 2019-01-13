@@ -46,6 +46,9 @@ class ApiTokens
             'created_at' => microtime(true),
             'token'      => $token,
             'title'      => $title,
+            'site_id'    => 0,
+            'is_active'  => 1,
+            'is_root'    => 0,
         ];
         $prefix = (defined('TABLE_PREFIX')) ? TABLE_PREFIX : '';
         $insert_id = PDO_DB::insert($arr, $prefix . 'api_tokens');
@@ -107,7 +110,6 @@ class ApiTokens
      * @param  strign $type  Тип поля: query|mutation
      * @param  string $token Токен, права которого проверяем. OPTIONAL
      *
-     * @throws Exception     if token not found
      * @throws Exception     if Token not found
      * @throws Exception     if Token disabled
      * @throws Exception     if token does not have access to field
@@ -225,6 +227,6 @@ class ApiTokens
             $lang = 'ru';
         }
 
-        return (isset($errors[$lang][$code])) ? $errors[$lang][$code] : null;
+        return (isset($errors[$lang][$code])) ? $errors[$lang][$code] : $code;
     }
 }
