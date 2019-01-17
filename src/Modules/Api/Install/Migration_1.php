@@ -112,8 +112,9 @@ class Migration_1 implements MigrationInterface
 
             switch (PDO_DB::getParams('type')) {
                 case 'pgsql':
-                    PDO_DB::query("DROP TABLE IF EXISTS {$prefix}api_tokens");
+                    PDO_DB::query("ALTER TABLE tpl_api_token_permission DROP CONSTRAINT {$prefix}api_token_permission_ibfk_1;");
                     PDO_DB::query("DROP TABLE IF EXISTS {$prefix}api_token_permission");
+                    PDO_DB::query("DROP TABLE IF EXISTS {$prefix}api_tokens");
 
                     PDO_DB::query("DROP SEQUENCE IF EXISTS {$prefix}api_tokens_seq;");
                     PDO_DB::query("DROP SEQUENCE IF EXISTS {$prefix}api_token_permission_seq;");
