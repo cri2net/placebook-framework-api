@@ -13,7 +13,6 @@
         "cri2net/php-pdo-db": "^1.2",
         "youshido/graphql": "^1.4",
         "placebook/framework-basic": "^1.2.0",
-        "placebook/framework-status": "^1.1.1",
         "placebook/framework-selfupdate": "^1.2.0"
     },
     "require-dev": {
