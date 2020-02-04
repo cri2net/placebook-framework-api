@@ -33,7 +33,7 @@ class ApiTokens
     /**
      * Добавление нового токена
      * @param  string  $title Название токена. Можно использовать как описание
-     * @param  string  $token Случайная строка с токенов, например, результат Codes::generate(64). Токен должен быть уникальным
+     * @param  string  $token Случайная строка с токеном, например, результат Codes::generate(64). Токен должен быть уникальным
      * @return integer ID добавленного токена
      */
     public static function add($title, $token)
