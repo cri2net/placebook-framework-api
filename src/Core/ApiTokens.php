@@ -2,8 +2,8 @@
 
 namespace Placebook\Framework\Core;
 
-use \Exception;
-use \cri2net\php_pdo_db\PDO_DB;
+use Exception;
+use cri2net\php_pdo_db\PDO_DB;
 
 /**
  * Класс предназначен для работы с токенами доступа к API:
@@ -17,11 +17,7 @@ class ApiTokens
      */
     public static function getTokenFromHeaders()
     {
-        if (function_exists('getallheaders')) {
-            $http_headers = getallheaders();
-        } else {
-            $http_headers = Http::getAllHeaders();
-        }
+        $http_headers = Http::getAllHeaders();
 
         if (isset($http_headers['Authorization'])) {
             return trim($http_headers['Authorization']);
@@ -64,14 +60,7 @@ class ApiTokens
     public static function getTokenByString($token)
     {
         $prefix = (defined('TABLE_PREFIX')) ? TABLE_PREFIX : '';
-        $stm = PDO_DB::prepare("SELECT * FROM " . $prefix . "api_tokens WHERE token = ? LIMIT 1", [$token]);
-        $row = $stm->fetch();
-
-        if ($row === false) {
-            return null;
-        }
-
-        return $row;
+        return PDO_DB::row_by_id($prefix . 'api_tokens', $token, 'token');
     }
 
     /**

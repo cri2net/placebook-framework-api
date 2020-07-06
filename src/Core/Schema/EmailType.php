@@ -1,10 +1,11 @@
 <?php
+
 namespace Placebook\Framework\Core\Schema;
 
 use Youshido\GraphQL\Type\Scalar\StringType;
 
 /**
- * Тип данных: E-mail
+ * Type: E-mail
  */
 class EmailType extends StringType
 {

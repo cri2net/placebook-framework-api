@@ -2,9 +2,9 @@
 
 namespace Placebook\Framework\Modules\Api\Install;
 
-use \Exception;
+use Exception;
 use cri2net\php_pdo_db\PDO_DB;
-use \Placebook\Framework\Core\Install\MigrationInterface;
+use Placebook\Framework\Core\Install\MigrationInterface;
 
 class Migration_1 implements MigrationInterface
 {
