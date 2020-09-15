@@ -6,14 +6,14 @@ use Exception;
 use cri2net\php_pdo_db\PDO_DB;
 
 /**
- * Класс предназначен для работы с токенами доступа к API:
- * проверка прав, наложение ограничений на ответы API, управление токенами и их доступом
+ * The class is designed to work with API access tokens:
+ * checking permissions, imposing restrictions on API responses, managing tokens and their access
  */
 class ApiTokens
 {
     /**
-     * Получение Токена авторизации из HTTP Заголовкой запроса
-     * @return string|false Токен
+     * Getting Authorization Token from HTTP by Request Header
+     * @return string|false Token
      */
     public static function getTokenFromHeaders()
     {
@@ -27,12 +27,12 @@ class ApiTokens
     }
 
     /**
-     * Добавление нового токена
-     * @param  string  $title Название токена. Можно использовать как описание
-     * @param  string  $token Случайная строка с токеном, например, результат Codes::generate(64). Токен должен быть уникальным
-     * @return integer ID добавленного токена
+     * Adding a new token
+     * @param  string  $title Token name. Can be used as description
+     * @param  string  $token A random string with a token, such as the result of Codes::generate(64). The token must be unique
+     * @return integer ID of the added token
      */
-    public static function add($title, $token)
+    public static function add(string $title, string $token) : int
     {
         if (self::getTokenByString($token) !== null) {
             throw new Exception(self::getError('TOKEN_ALREADY_EXISTS'));
@@ -53,26 +53,26 @@ class ApiTokens
     }
 
     /**
-     * Получение записи из БД о токене
-     * @param  string      $token Строка с токеном
-     * @return array|null  Данные о токене
+     * Getting a record from the database about a token
+     * @param  string      $token Token string
+     * @return array|null  Token data
      */
-    public static function getTokenByString($token)
+    public static function getTokenByString(string $token) : ?array
     {
         $prefix = (defined('TABLE_PREFIX')) ? TABLE_PREFIX : '';
         return PDO_DB::row_by_id($prefix . 'api_tokens', $token, 'token');
     }
 
     /**
-     * Проверка Токена доступа.
-     * Проверяется, присутствует ли такое Токен вообще, а не его конкретные права
+     * Access Token verification.
+     * It is checked whether such a Token is present at all, and not its specific rights
      *
      * @throws Exception if Authorization HTTP header not presented
      * @throws Exception if Token not found
      * @throws Exception if Token disabled
-     * @return array Данные о токене
+     * @return array Token data
      */
-    public static function checkToken()
+    public static function checkToken() : array
     {
         $token = self::getTokenFromHeaders();
         if ($token === false) {
@@ -93,19 +93,19 @@ class ApiTokens
     }
 
     /**
-     * Проверка токена на право обращаться к определённому «полю» API
+     * Checking a token for the right to access a specific «field» of the API
      * 
-     * @param  string $name  Регистрозависимое! название поля API
-     * @param  strign $type  Тип поля: query|mutation
-     * @param  string $token Токен, права которого проверяем. OPTIONAL
+     * @param  string $name  Case sensitive! API field name
+     * @param  string $type  Field type: query|mutation
+     * @param  string $token Token whose rights we are checking. OPTIONAL
      *
      * @throws Exception     if Token not found
      * @throws Exception     if Token disabled
      * @throws Exception     if token does not have access to field
      * 
-     * @return array         Данные о доступе Токена к полю API
+     * @return array         Token access data to the API field
      */
-    public static function checkPermis($name, $type, $token = null)
+    public static function checkPermis(string $name, string $type, string $token = null) : array
     {
         if ($token === null) {
             $token = self::getTokenFromHeaders();
@@ -120,7 +120,7 @@ class ApiTokens
             throw new Exception(self::getError('NOT_ACTIVE'));
         }
 
-        // для root доступа не делаем проверку по БД, а возвращаем максимальный доступ к полю
+        // for root access, we do not check against the database, but return the maximum access to the field
         if ($row['is_root']) {
             return [
                 'token_id'  => $row['id'],
@@ -150,21 +150,15 @@ class ApiTokens
     }
 
     /**
-     * Метод удаляет все поля, на которых нет доступа
-     * Используется рекурсия для обработки вложенных массивов
+     * The method removes all fields that have no access
+     * Recursion is used to process nested arrays
      * 
-     * @param  array  $data  Массив с данными. Допускаются многоуровневые массивы
-     * @param  array  $rules Массив с разрешёнными ключами. Допускаются многоуровневые массивы
-     * @return array  Исходный массив с данными, без ключей, которые указаны в списке разрешённых
+     * @param  array  $data  Array with data. Multilevel Arrays Allowed
+     * @param  array  $rules An array with allowed keys. Multilevel Arrays Allowed
+     * @return array  The original array with data, without keys, which are indicated in the list of allowed
      */
-    public static function unsetFieldsWithoutPermission($data, $rules)
+    public static function unsetFieldsWithoutPermission(array $data, array $rules) : array
     {
-        if (!is_array($data)) {
-            return $data;
-        }
-
-        $rules = (array)$rules;
-
         foreach ($data as $key => $value) {
             if (!in_array($key, $rules) && !array_key_exists($key, $rules)) {
                 unset($data[$key]);
@@ -177,12 +171,12 @@ class ApiTokens
     }
 
     /**
-     * Получаем описание ошибки по коду
-     * @param  string $code Код ошибки
-     * @param  string $lang Желаемый язык описания ошибки. OPTIONAL
-     * @return string Описание кода
+     * Get error description by code
+     * @param  string $code Error code
+     * @param  string $lang Desired error language. OPTIONAL
+     * @return string Error description
      */
-    public static function getError($code, $lang = null)
+    public static function getError(string $code, string $lang = null) : string
     {
         if ($lang == null) {
             $lang = SystemConfig::get('lang', 'ru');
@@ -216,6 +210,6 @@ class ApiTokens
             $lang = 'ru';
         }
 
-        return (isset($errors[$lang][$code])) ? $errors[$lang][$code] : $code;
+        return $errors[$lang][$code] ?? $code;
     }
 }
