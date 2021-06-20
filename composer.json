@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^7.0",
+        "php": "^7.0|^8.0",
         "cri2net/php-pdo-db": "^1.2",
         "youshido/graphql": "^1.4",
         "placebook/framework-basic": "^1.2|^2.0",

@@ -16,7 +16,7 @@ class EmailType extends StringType
 
     public function isValidValue($value)
     {
-        return is_null($value) || (bool)filter_var($value, FILTER_VALIDATE_EMAIL);
+        return is_null($value) || filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 
     public function getDescription()
